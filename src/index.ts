@@ -6,6 +6,10 @@ const app = express()
 const port = process.env.port || 4001
 
 const parserMiddleware = bodyParser({})
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('Video-server')
+})
 app.use(parserMiddleware)
 
 app.use('/hometask_01/api/videos', videoRouter)
