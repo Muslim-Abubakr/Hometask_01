@@ -19,11 +19,6 @@ const db = {
         },
     ]
 };
-const errors = {
-    errorsMessages: [
-        {}
-    ]
-};
 const HTTP_STATUSES = {
     OK200: 200,
     CREATED_201: 201,
@@ -38,13 +33,14 @@ exports.videoRouter.delete('', (req, res) => {
 exports.videoRouter.get('/', (req, res) => {
     let foundAllVideos = db.videos;
     res.send(foundAllVideos);
-    res.sendStatus(HTTP_STATUSES.OK200);
+    res.status(HTTP_STATUSES.OK200);
 });
 exports.videoRouter.get('/:id', (req, res) => {
     let foundVideo = db.videos.find(v => v.id === +req.params.id);
     if (foundVideo) {
-        res.json(foundVideo);
-        res.sendStatus(HTTP_STATUSES.OK200);
+        res
+            .json(foundVideo)
+            .status(HTTP_STATUSES.OK200);
     }
     else {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
@@ -53,25 +49,24 @@ exports.videoRouter.get('/:id', (req, res) => {
 exports.videoRouter.delete('/:id', (req, res) => {
     db.videos = db.videos.filter(v => v.id !== +req.params.id);
     res.sendStatus(HTTP_STATUSES.NO_CONTENT);
-    res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
 });
 exports.videoRouter.post('/', (req, res) => {
-    if (!req.body.title || !req.body.author) {
-        errors.errorsMessages.push({
-            "message": "",
-            "field": ""
+    let title = req.body.title;
+    if (!title) {
+        res.status(HTTP_STATUSES.BAD_REQUEST_400).send({
+            errorsMessages: [{
+                    "message": "incorrect values",
+                    "field": "title"
+                }]
         });
-        res
-            .json(errors)
-            .status(HTTP_STATUSES.BAD_REQUEST_400);
         return;
     }
     const currentDate = new Date();
     const isoDate = currentDate.toISOString();
     const createdVideo = {
         id: +(new Date()),
-        title: req.body.title,
-        author: req.body.author,
+        title: title,
+        author: "Muslim_Abubakarov",
         canBeDownloaded: true,
         minAgeRestriction: null,
         createdAt: isoDate,
@@ -85,26 +80,22 @@ exports.videoRouter.post('/', (req, res) => {
         .status(HTTP_STATUSES.CREATED_201)
         .json(createdVideo);
 });
-/*  videoRouter.put('/:id', (req: Request, res: Response) => {
-    const foundVideo = db.videos.find(v => v.id === +req.params.id)
-
+exports.videoRouter.put('/:id', (req, res) => {
+    const foundVideo = db.videos.find(v => v.id === +req.params.id);
+    let title = req.body.title;
     if (!foundVideo) {
-        res.status(HTTP_STATUSES.NOT_FOUND_404)
+        res.status(HTTP_STATUSES.NOT_FOUND_404);
         return;
     }
-
-    foundVideo.title = req.body.title
-    foundVideo.author = req.body.title
-
-    res.send(foundVideo)
-
-*/
-//})
-// const errorsMessages =[];
-// if(true){
-//   errors.push({
-//     message: 'ee',
-//     field: 'author'
-//   })
-// }
-// res.status(400).json(errorsMessages)
+    if (!title) {
+        res.status(HTTP_STATUSES.BAD_REQUEST_400).send({
+            errorsMessages: [{
+                    "message": "incorrect value",
+                    "field": "title"
+                }]
+        });
+    }
+    foundVideo.title = req.body.title;
+    foundVideo.author = req.body.author;
+    res.send(foundVideo);
+});
