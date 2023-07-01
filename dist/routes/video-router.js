@@ -26,11 +26,6 @@ const HTTP_STATUSES = {
     BAD_REQUEST_400: 400,
     NOT_FOUND_404: 404
 };
-exports.videoRouter.delete('/', (req, res) => {
-    db.videos = [];
-    res
-        .sendStatus(HTTP_STATUSES.NO_CONTENT);
-});
 exports.videoRouter.get('/', (req, res) => {
     res
         .json(db.videos)
@@ -79,7 +74,7 @@ exports.videoRouter.post('/', (req, res) => {
     db.videos.push(createdVideo);
     res
         .sendStatus(HTTP_STATUSES.CREATED_201)
-        .json(createdVideo);
+        .send(createdVideo);
 });
 exports.videoRouter.put('/:id', (req, res) => {
     const foundVideo = db.videos.find(v => v.id === +req.params.id);
