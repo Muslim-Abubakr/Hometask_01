@@ -31,13 +31,8 @@ exports.videoRouter.delete('', (req, res) => {
     res.sendStatus(HTTP_STATUSES.NO_CONTENT);
 });
 exports.videoRouter.get('/', (req, res) => {
-    let foundAllVideos = db.videos;
-    if (req.query.title) {
-        foundAllVideos = foundAllVideos
-            .filter(v => v.title.indexOf(req.query.title) > -1);
-    }
     res
-        .json(foundAllVideos)
+        .send(db.videos)
         .status(HTTP_STATUSES.OK200);
 });
 exports.videoRouter.get('/:id', (req, res) => {

@@ -36,15 +36,8 @@ videoRouter.delete('', (req: Request, res: Response) => {
   })
   
 videoRouter.get('/', (req: Request, res: Response) => {
-    let foundAllVideos = db.videos
-
-    if (req.query.title) {
-      foundAllVideos = foundAllVideos
-      .filter(v => v.title.indexOf(req.query.title as string) > -1)
-    }
-
     res
-        .json(foundAllVideos)
+        .send(db.videos)
         .status(HTTP_STATUSES.OK200)
   })
   
