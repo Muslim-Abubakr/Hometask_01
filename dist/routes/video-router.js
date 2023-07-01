@@ -32,8 +32,9 @@ exports.videoRouter.delete('', (req, res) => {
 });
 exports.videoRouter.get('/', (req, res) => {
     let foundAllVideos = db.videos;
-    res.send(foundAllVideos);
-    res.status(HTTP_STATUSES.OK200);
+    res
+        .send(foundAllVideos)
+        .status(HTTP_STATUSES.OK200);
 });
 exports.videoRouter.get('/:id', (req, res) => {
     let foundVideo = db.videos.find(v => v.id === +req.params.id);
