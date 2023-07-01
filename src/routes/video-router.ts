@@ -38,7 +38,7 @@ videoRouter.delete('/', (req: Request, res: Response) => {
   
 videoRouter.get('/', (req: Request, res: Response) => {
     res
-        .send(db.videos)
+        .json(db.videos)
         .status(HTTP_STATUSES.OK200)
 })
   

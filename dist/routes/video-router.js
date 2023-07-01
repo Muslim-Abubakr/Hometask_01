@@ -33,7 +33,7 @@ exports.videoRouter.delete('/', (req, res) => {
 });
 exports.videoRouter.get('/', (req, res) => {
     res
-        .send(db.videos)
+        .json(db.videos)
         .status(HTTP_STATUSES.OK200);
 });
 exports.videoRouter.get('/:id', (req, res) => {
