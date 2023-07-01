@@ -7,15 +7,10 @@ const port = process.env.port || 4000
 
 const parserMiddleware = bodyParser({})
 
-app.use(parserMiddleware)
+app.use(express.json())
+app.use(express.urlencoded({extended: true}));
 
 app.use('/hometask_01/api/videos/', videoRouter)
-
-app.get('/hometask_01/api/videos/', videoRouter)
-
-app.post('/hometask_01/api/videos/', videoRouter)
-
-app.delete('/hometask_01/api/videos/', videoRouter)
 
 app.use('/ht_01/api/testing/all-data', videoRouter)
 
