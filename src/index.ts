@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import { videoRouter } from './routes/video-router'
 
 const app = express()
-const port = process.env.port || 4001
+const port = process.env.port || 4000
 
 const parserMiddleware = bodyParser({})
 

@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const video_router_1 = require("./routes/video-router");
 const app = (0, express_1.default)();
-const port = process.env.port || 4001;
+const port = process.env.port || 4000;
 const parserMiddleware = (0, body_parser_1.default)({});
 app.use(parserMiddleware);
 app.use('/hometask_01/api/videos', video_router_1.videoRouter);
