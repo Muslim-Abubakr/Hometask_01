@@ -36,7 +36,7 @@ videoRouter.delete('/', (req: Request, res: Response) => {
         .sendStatus(HTTP_STATUSES.NO_CONTENT)
   })
   
-videoRouter.get('/hometask_01/api/videos', (req: Request, res: Response) => {
+videoRouter.get('/', (req: Request, res: Response) => {
     res
         .send(db.videos)
         .status(HTTP_STATUSES.OK200)
