@@ -10,7 +10,11 @@ const app = (0, express_1.default)();
 const port = process.env.port || 4000;
 const parserMiddleware = (0, body_parser_1.default)({});
 app.use(parserMiddleware);
-app.use('/hometask_01/api/videos', video_router_1.videoRouter);
+app.use('/hometask_01/api/videos/', video_router_1.videoRouter);
+app.get('/hometask_01/api/videos/', video_router_1.videoRouter);
+app.post('/hometask_01/api/videos/', video_router_1.videoRouter);
+app.delete('/hometask_01/api/videos/', video_router_1.videoRouter);
+app.use('/ht_01/api/testing/all-data', video_router_1.videoRouter);
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });

@@ -26,9 +26,10 @@ const HTTP_STATUSES = {
     BAD_REQUEST_400: 400,
     NOT_FOUND_404: 404
 };
-exports.videoRouter.delete('', (req, res) => {
+exports.videoRouter.delete('/', (req, res) => {
     db.videos = [];
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT);
+    res
+        .sendStatus(HTTP_STATUSES.NO_CONTENT);
 });
 exports.videoRouter.get('/', (req, res) => {
     res

@@ -9,7 +9,15 @@ const parserMiddleware = bodyParser({})
 
 app.use(parserMiddleware)
 
-app.use('/hometask_01/api/videos', videoRouter)
+app.use('/hometask_01/api/videos/', videoRouter)
+
+app.get('/hometask_01/api/videos/', videoRouter)
+
+app.post('/hometask_01/api/videos/', videoRouter)
+
+app.delete('/hometask_01/api/videos/', videoRouter)
+
+app.use('/ht_01/api/testing/all-data', videoRouter)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

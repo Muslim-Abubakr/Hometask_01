@@ -29,10 +29,11 @@ const db = {
     BAD_REQUEST_400: 400,
     NOT_FOUND_404: 404
   }
-  
-videoRouter.delete('', (req: Request, res: Response) => {
+
+videoRouter.delete('/', (req: Request, res: Response) => {
     db.videos  = []
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT)
+    res
+        .sendStatus(HTTP_STATUSES.NO_CONTENT)
   })
   
 videoRouter.get('/', (req: Request, res: Response) => {
