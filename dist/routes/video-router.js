@@ -82,8 +82,13 @@ exports.videoRouter.post('/', (req, res) => {
     };
     exports.videos.push(newVideo);
     res
+<<<<<<< HEAD
         .send(newVideo)
         .status(201);
+=======
+        .sendStatus(HTTP_STATUSES.CREATED_201)
+        .send(createdVideo);
+>>>>>>> 8f8456e37bab03be6b2396388a38e807f62be261
 });
 exports.videoRouter.put('/:id', (req, res) => {
     const foundVideo = exports.videos.find(v => v.id === +req.params.id);
