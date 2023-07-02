@@ -1,24 +1,29 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.videoRouter = void 0;
+exports.videos = exports.videoRouter = void 0;
 const express_1 = require("express");
 exports.videoRouter = (0, express_1.Router)({});
-const db = {
-    videos: [
-        {
-            "id": 0,
-            "title": "string",
-            "author": "string",
-            "canBeDownloaded": false,
-            "minAgeRestriction": null,
-            "createdAt": "2023-06-29T20:14:02.205Z",
-            "publicationDate": "2023-06-29T20:14:02.205Z",
-            "availableResolutions": [
-                "P144"
-            ]
-        },
-    ]
-};
+exports.videos = [{
+        "id": 1,
+        "title": "string",
+        "author": "string",
+        "canBeDownloaded": false,
+        "minAgeRestriction": null,
+        "createdAt": new Date().toISOString(),
+        "publicationDate": new Date(new Date().setDate(new Date().getDate() + 1)).toISOString(),
+        "availableResolutions": ["P144"]
+    }, {
+        "id": 2,
+        "title": "string",
+        "author": "string",
+        "canBeDownloaded": false,
+        "minAgeRestriction": null,
+        "createdAt": new Date().toISOString(),
+        "publicationDate": new Date(new Date().setDate(new Date().getDate() + 1)).toISOString(),
+        "availableResolutions": ["P144"]
+    }
+];
+const permissionValues = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160'];
 const HTTP_STATUSES = {
     OK200: 200,
     CREATED_201: 201,
@@ -26,21 +31,16 @@ const HTTP_STATUSES = {
     BAD_REQUEST_400: 400,
     NOT_FOUND_404: 404
 };
-exports.videoRouter.delete('/', (req, res) => {
-    db.videos = [];
-    res
-        .sendStatus(HTTP_STATUSES.NO_CONTENT);
-});
 exports.videoRouter.get('/', (req, res) => {
     res
-        .json(db.videos)
+        .send(exports.videos)
         .status(HTTP_STATUSES.OK200);
 });
 exports.videoRouter.get('/:id', (req, res) => {
-    let foundVideo = db.videos.find(v => v.id === +req.params.id);
+    let foundVideo = exports.videos.find(v => v.id === +req.params.id);
     if (foundVideo) {
         res
-            .json(foundVideo)
+            .send(foundVideo)
             .status(HTTP_STATUSES.OK200);
     }
     else {
@@ -48,41 +48,45 @@ exports.videoRouter.get('/:id', (req, res) => {
     }
 });
 exports.videoRouter.delete('/:id', (req, res) => {
-    db.videos = db.videos.filter(v => v.id !== +req.params.id);
-    res.sendStatus(HTTP_STATUSES.NO_CONTENT);
+    for (let i = 0; i < exports.videos.length; i++) {
+        if (exports.videos[i].id === +req.params.id) {
+            exports.videos.splice(i, 1);
+            res.send(HTTP_STATUSES.NO_CONTENT);
+            return;
+        }
+        else {
+            res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
+        }
+    }
 });
 exports.videoRouter.post('/', (req, res) => {
     let title = req.body.title;
-    if (!title) {
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400).send({
+    let author = req.body.author;
+    let avaiResol = req.body.availableResolutions;
+    let errorsMessages = [];
+    if (!title || typeof title !== 'string' || !title.trim()) {
+        res
+            .sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+            .send({
             errorsMessages: [{
-                    "message": "incorrect values",
+                    "message": "Incorrect title",
                     "field": "title"
                 }]
         });
         return;
     }
-    const currentDate = new Date();
-    const isoDate = currentDate.toISOString();
-    const createdVideo = {
+    const newVideo = {
         id: +(new Date()),
         title: title,
-        author: "string",
-        canBeDownloaded: true,
-        minAgeRestriction: null,
-        createdAt: isoDate,
-        publicationDate: isoDate,
-        availableResolutions: [
-            "P144"
-        ]
+        author: author
     };
-    db.videos.push(createdVideo);
+    exports.videos.push(newVideo);
     res
-        .sendStatus(HTTP_STATUSES.CREATED_201)
-        .json(createdVideo);
+        .send(newVideo)
+        .status(201);
 });
 exports.videoRouter.put('/:id', (req, res) => {
-    const foundVideo = db.videos.find(v => v.id === +req.params.id);
+    const foundVideo = exports.videos.find(v => v.id === +req.params.id);
     let title = req.body.title;
     if (!foundVideo) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);

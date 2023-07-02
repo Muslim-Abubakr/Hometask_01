@@ -2,24 +2,28 @@ import { Request, Response, Router } from "express";
 
 export const videoRouter = Router({})
 
-const db = {
-    videos: [
-      
-      { 
-      "id": 0,
-      "title": "string",
-      "author": "string",
-      "canBeDownloaded": false,
-      "minAgeRestriction": null,
-      "createdAt": "2023-06-29T20:14:02.205Z",
-      "publicationDate": "2023-06-29T20:14:02.205Z",
-      "availableResolutions": [
-        "P144"
-        ]
-      },
+export let videos = [{
+    "id": 1,
+    "title": "string",
+    "author": "string",
+    "canBeDownloaded": false,
+    "minAgeRestriction": null,
+    "createdAt": new Date().toISOString(),
+    "publicationDate": new Date(new Date().setDate(new Date().getDate() + 1)).toISOString(),
+    "availableResolutions": ["P144"]
+}, {
+    "id": 2,
+    "title": "string",
+    "author": "string",
+    "canBeDownloaded": false,
+    "minAgeRestriction": null,
+    "createdAt": new Date().toISOString(),
+    "publicationDate": new Date(new Date().setDate(new Date().getDate() + 1)).toISOString(),
+    "availableResolutions": ["P144"]
+}
+]
 
-    ]
-  }
+const permissionValues = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160']
 
   const HTTP_STATUSES = {
     OK200: 200,
@@ -29,25 +33,20 @@ const db = {
     BAD_REQUEST_400: 400,
     NOT_FOUND_404: 404
   }
-
-videoRouter.delete('/', (req: Request, res: Response) => {
-    db.videos  = []
-    res
-        .sendStatus(HTTP_STATUSES.NO_CONTENT)
-})
+  
   
 videoRouter.get('/', (req: Request, res: Response) => {
     res
-        .json(db.videos)
+        .send(videos)
         .status(HTTP_STATUSES.OK200)
 })
   
 videoRouter.get('/:id', (req: Request, res: Response) => {
-    let foundVideo = db.videos.find(v => v.id === +req.params.id)
+    let foundVideo = videos.find(v => v.id === +req.params.id)
   
     if (foundVideo) {
       res
-          .json(foundVideo)
+          .send(foundVideo)
           .status(HTTP_STATUSES.OK200)
     } else {
       res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
@@ -55,52 +54,52 @@ videoRouter.get('/:id', (req: Request, res: Response) => {
 })
   
 videoRouter.delete('/:id', (req: Request, res: Response) => {
-  db.videos = db.videos.filter(v => v.id !== +req.params.id)
-  
-  
-  res.sendStatus(HTTP_STATUSES.NO_CONTENT)
+  for (let i = 0; i < videos.length; i++) {
+    if (videos[i].id === +req.params.id) {
+      videos.splice(i, 1)
+      res.send(HTTP_STATUSES.NO_CONTENT)
+      return;
+    } else {
+      res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    }
+  }
 
 })
 
 videoRouter.post('/', (req: Request, res: Response) => {
+  let title = req.body.title
+  let author = req.body.author
+  let avaiResol = req.body.availableResolutions
 
-    let title = req.body.title
-    if (!title) {
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400).send({
+  let errorsMessages = []
+
+  if (!title || typeof title !== 'string' || !title.trim()) {
+    res
+        .sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
+        .send({
           errorsMessages: [{
-            "message": "incorrect values",
+            "message": "Incorrect title",
             "field": "title"
           }]
         })
         return;
-    }
+  }
 
-    const currentDate = new Date();
-    const isoDate = currentDate.toISOString()
+  const newVideo = {
+    id: +(new Date()),
+    title: title,
+    author: author
+  }
 
-    const createdVideo = {
-        id: +(new Date()),
-        title: title,
-        author: "string",
-        canBeDownloaded: true,
-        minAgeRestriction: null,
-        createdAt: isoDate,
-        publicationDate: isoDate,
-        availableResolutions: [
-            "P144"
-        ]
-    }
+  videos.push(newVideo)
+  res
+      .send(newVideo)
+      .status(201)
 
-    db.videos.push(createdVideo)
-
-    res
-        .sendStatus(HTTP_STATUSES.CREATED_201)
-        .json(createdVideo)
-    
 })
 
  videoRouter.put('/:id', (req: Request, res: Response) => {
-    const foundVideo = db.videos.find(v => v.id === +req.params.id)
+    const foundVideo = videos.find(v => v.id === +req.params.id)
     let title = req.body.title
     if (!foundVideo) {
         res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
